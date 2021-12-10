@@ -1,6 +1,8 @@
 var express = require('express');
-var router = express.Router();
+
 var passport = require('passport');
+
+var router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -10,9 +12,13 @@ router.get('/', function (req, res, next) {
 router.get('/success', (req, res, next) => {
   res.render('success');
 });
+
 router.get('/failure', (req, res, next) => {
   res.render('failure');
 });
+
+
+// github
 
 router.get('/auth/github',
   passport.authenticate('github')

@@ -5,11 +5,11 @@ var GitHubStrategy = require('passport-github').Strategy;
 passport.use(
   new GitHubStrategy(
     {
-      clientID: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      clientID: 'bec998bb8b3a79492ec3',
+      clientSecret: '4e1a4b31e35fe5bfd4ff17dce0d4b8239b3ecbd5',
       callbackURL: '/auth/github/callback',
     },
-    (accessToken, refreshToken, profile, cb) => {
+    (accessToken, refreshToken, profile, done) => {
       console.log(profile);
 
       var profileData = {
@@ -19,15 +19,16 @@ passport.use(
         photo: profile._json.avatar_url,
       };
 
-      User.findOne({ email: profile._json.email }, (err, user) => {
-        if (err) return cb(err);
+      User.findOne({ 'profileData.username': profile.username }, (err, user) => {
+        if (err) return done(err);
         if (!user) {
-          User.create(profileData, (err, addeduser) => {
-            if (err) return cb(err);
-            return cb(null, addeduser);
+          User.create(profileData, (err, addedUser) => {
+            if (err) return done(err);
+            return done(null, addedUser);
           });
+        } else {
+         return done(null, user);
         }
-        cb(null, user);
       });
     }
   )
@@ -44,23 +45,24 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: '/auth/google/callback',
     },
-    (accessToken, refreshToken, profile, cb) => {
+    (accessToken, refreshToken, profile, done) => {
+      console.log(profile);
+
       var profileData = {
         name: profile.displayName,
-        username: profile.username,
-        email: profile._json.bio,
-        photo: profile._json.avatar_url,
+        email: profile._json.email,
+        photo: profile._json.picture,
       };
 
-      User.findOne({ email: profile._json.email }, (err, user) => {
-        if (err) return cb(err);
+      User.findOne({ 'profileData.email': profile._json.email }, (err, user) => {
+        if (err) return done(err);
         if (!user) {
           User.create(profileData, (err, addeduser) => {
-            if (err) return cb(err);
-            return cb(null, addeduser);
+            if (err) return done(err);
+            return done(null, addeduser);
           });
         } else {
-          cb(null, user);
+         return done(null, user);
         }
       });
     }
@@ -72,7 +74,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
-  User.findById(id, 'name email uesrname photo', function (err, user) {
+  User.findById(id, 'name  uesrname email photo', function (err, user) {
     done(err, user);
   });
 });
