@@ -8,6 +8,7 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo');
 var flash = require('connect-flash');
 var passport = require('passport');
+
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
@@ -17,11 +18,11 @@ mongoose.connect(
   'mongodb://localhost/OAuth-Using-Github',
   { useNewUrlParser: true, useUnifiedTopology: true },
   (err) => {
-    console.log(err ? err : 'databse connected');
+    console.log(err ? err : 'Connected to the database');
   }
 );
 
-require('./modules/Passport');
+require('./modules/passport');
 
 var app = express();
 
@@ -37,16 +38,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
   session({
-    secret: 'some secret of application;',
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: 'mongodb://localhost/OAuth-Using-Github' }),
   })
 );
+
+app.use(flash());
+
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(flash());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
