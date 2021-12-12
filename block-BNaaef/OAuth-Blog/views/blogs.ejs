@@ -42,14 +42,23 @@
           >
         </nav>
         <% }else{ %>
-        <nav class="flex justify-between align-end">
-          <a style="margin-right: 0.5rem" href="/users/signin"
-            ><button class="btn btn-primary">Sign In</button></a
-          >
-          <a href="/users/signup"
-            ><button class="btn btn-primary">Sign Up</button></a
-          >
-        </nav>
+         <div
+          style="padding: 1rem; padding-bottom: 2rem"
+          class="flec justify-between align-center"
+        >
+          <a
+            class="btn btn-primary"
+            style="margin: 0.5rem"
+            href="/users/auth/google"
+            >Login with google <i style="background-color: white; padding: 0.2rem; border-radius: 50%;" class="fab fa-google"></i
+          ></a>
+          <a
+            class="btn btn-primary"
+            style="margin: 0.5rem"
+            href="/users/auth/github"
+            >Login with github <i style="background-color: white; padding: 0.2rem; border-radius: 50%;" class="fab fa-github"></i
+          ></a>
+        </div>
         <% } %>
       </div>
     </header>
